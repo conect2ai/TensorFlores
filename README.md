@@ -160,7 +160,7 @@ Table 3 presents a summary of the clustering algorithms and their respective con
 pip install  tensorflores
 ```
 
-#### If you want to install it locally you download the Wheel distribution from [Build Distribution](https://pypi.org/project/conect2py/0.1.1/#files).
+#### If you want to install it locally you download the Wheel distribution from [Build Distribution](https://pypi.org/project/tensorflores/).
 
 *First navigate to the folder where you downloaded the file and run the following command:*
 
@@ -210,8 +210,7 @@ The Arduino code to deployment are avaliable [here](./examples/05_auxiliary/ardu
 
 ## Other Models
 
-Please check the [informations](https://github.com/conect2ai/Conect2Py-Package/blob/main/Info/AutoCloud.md) for more information about the other models been implemented in this package.
-
+Please check the [informations](https://github.com/conect2ai/TensorFlores/blob/main/README.md) for more information about the other models been implemented in this package.
 
 # Literature reference
 
