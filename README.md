@@ -5,9 +5,10 @@
 &nbsp;
 &nbsp;
 <p align="center">
-  <img width="800" src="https://github.com/conect2ai/TensorFlores/blob/cc0094c8ad10cc225b8a20e143e27ef9715cdfc5/figures/tensorflores_logo.png" />
+  <img width="800" src="https://drive.google.com/uc?export=view&id=1JlRnq5IG1ZMwfzu2-Wr9rKw5Hd-MidIn" />
 </p> 
 &nbsp;
+
 
 
 
@@ -81,9 +82,10 @@ The pipeline illustrated in Figure outlines a workflow for optimizing and deploy
 
 &nbsp;
 <p align="center">
-  <img width="800" src="https://github.com/conect2ai/TensorFlores/blob/550a9f6415ee8396222bd80dffbc908fb70ed0d1/figures/pipeline.png" />
+  <img width="800" src="https://drive.google.com/uc?export=view&id=173u4BWHWPMw0BBa4GHxRtmP1RetHZ5gD" />
 </p> 
 &nbsp;
+
 
 
 The parameters are highly customizable, as shown in Table 1, which lists the class parameters and their corresponding default input values
@@ -158,7 +160,7 @@ Table 3 presents a summary of the clustering algorithms and their respective con
 pip install  tensorflores
 ```
 
-#### If you want to install it locally you download the Wheel distribution from [Build Distribution](https://pypi.org/project/conect2py/0.1.1/#files).
+#### If you want to install it locally you download the Wheel distribution from [Build Distribution](https://pypi.org/project/tensorflores/).
 
 *First navigate to the folder where you downloaded the file and run the following command:*
 
@@ -208,8 +210,7 @@ The Arduino code to deployment are avaliable [here](./examples/05_auxiliary/ardu
 
 ## Other Models
 
-Please check the [informations](https://github.com/conect2ai/Conect2Py-Package/blob/main/Info/AutoCloud.md) for more information about the other models been implemented in this package.
-
+Please check the [informations](https://github.com/conect2ai/TensorFlores/blob/main/README.md) for more information about the other models been implemented in this package.
 
 # Literature reference
 
