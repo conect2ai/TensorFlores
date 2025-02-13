@@ -81,7 +81,7 @@ The pipeline illustrated in Figure outlines a workflow for optimizing and deploy
 
 &nbsp;
 <p align="center">
-  <img width="800" src="./figures/pipeline.png" />
+  <img width="800" src="https://github.com/conect2ai/TensorFlores/blob/main/figures/pipeline.png" />
 </p> 
 &nbsp;
 
@@ -163,7 +163,7 @@ pip install  tensorflores
 *First navigate to the folder where you downloaded the file and run the following command:*
 
 ```bash
-pip install tensorflores-0.1.0-py3-none-any.whl
+pip install tensorflores-0.1.1-py3-none-any.whl
 ```
 
 ---
