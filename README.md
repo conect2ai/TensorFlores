@@ -5,7 +5,7 @@
 &nbsp;
 &nbsp;
 <p align="center">
-  <img width="800" src="./figures/tensorflores_logo.png" />
+  <img width="800" src="https://github.com/conect2ai/TensorFlores/blob/main/figures/tensorflores_logo.png" />
 </p> 
 &nbsp;
 
@@ -155,7 +155,7 @@ Table 3 presents a summary of the clustering algorithms and their respective con
 #### You can download our package from the PyPi repository using the following command:
 
 ```bash
-pip install  
+pip install  tensorflores
 ```
 
 #### If you want to install it locally you download the Wheel distribution from [Build Distribution](https://pypi.org/project/conect2py/0.1.1/#files).
@@ -163,7 +163,7 @@ pip install
 *First navigate to the folder where you downloaded the file and run the following command:*
 
 ```bash
-pip install  
+pip install tensorflores-0.1.0-py3-none-any.whl
 ```
 
 ---

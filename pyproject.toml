@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tensorflores"
+version = "0.1.0"
+authors = [
+  { name="Thommas Kevin Sales Flores", email="thommas.flores.101@ufrn.edu.br" },
+]
+description = "collection of biblical humans and their family relations"
+readme = "README.md"
+requires-python = ">=3.9.6"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://conect2ai.dca.ufrn.br/"
+Issues = "https://github.com/conect2ai/TensorFlores"
