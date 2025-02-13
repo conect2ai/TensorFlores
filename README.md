@@ -5,9 +5,10 @@
 &nbsp;
 &nbsp;
 <p align="center">
-  <img width="800" src="https://drive.google.com/file/d/1JlRnq5IG1ZMwfzu2-Wr9rKw5Hd-MidIn/view?usp=sharing" />
+  <img width="800" src="https://drive.google.com/uc?export=view&id=1JlRnq5IG1ZMwfzu2-Wr9rKw5Hd-MidIn" />
 </p> 
 &nbsp;
+
 
 
 
