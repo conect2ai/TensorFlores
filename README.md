@@ -5,7 +5,7 @@
 &nbsp;
 &nbsp;
 <p align="center">
-  <img width="800" src="https://github.com/conect2ai/TensorFlores/blob/550a9f6415ee8396222bd80dffbc908fb70ed0d1/figures/pipeline.png" />
+  <img width="800" src="https://github.com/conect2ai/TensorFlores/blob/cc0094c8ad10cc225b8a20e143e27ef9715cdfc5/figures/tensorflores_logo.png" />
 </p> 
 &nbsp;
 
