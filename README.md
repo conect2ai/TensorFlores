@@ -186,27 +186,27 @@ Implementation and Training of a Neural Network Using TensorFlores:
 Implementation and Training of a Neural Network with
 quantization-aware training (QAT) Using TensorFlores:
 
-[![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](./examples/02_example_02/Example_02.ipynb)
+[![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/conect2ai/TensorFlores/blob/main/examples/02_example_02/Example_02.ipynb)
 
 ### Example 03
 Post-Training Quantization with TensorFlores:
 
-[![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](./examples/03_example_03/Example_03.ipynb)
+[![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/conect2ai/TensorFlores/blob/main/examples/03_example_03/Example_03.ipynb)
 
 ### Example 04
 Converting a TensorFlow Model using
 TensorFlores: 
 
-[![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](./examples/04_example_04/Example_04.ipynb)
+[![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/conect2ai/TensorFlores/blob/main/examples/04_example_04/Example_04.ipynb)
 
 ### Auxiliary
 
 This section provides an example of code that transforms an input matrix (`X_test`) and (`y_test`) into a C++ array format.
 
-[![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](./examples/05_auxiliary/auxiliary.ipynb)
+[![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/conect2ai/TensorFlores/blob/main/examples/05_auxiliary/auxiliary.ipynb)
 
 
-The Arduino code to deployment are avaliable [here](./examples/05_auxiliary/arduino_code/MLP/MLP.ino): 
+The Arduino code to deployment are avaliable [here](https://github.com/conect2ai/TensorFlores/blob/main/examples/05_auxiliary/arduino_code/MLP/MLP.ino): 
 
 ## Other Models
 
