@@ -82,9 +82,10 @@ The pipeline illustrated in Figure outlines a workflow for optimizing and deploy
 
 &nbsp;
 <p align="center">
-  <img width="800" src="https://github.com/conect2ai/TensorFlores/blob/550a9f6415ee8396222bd80dffbc908fb70ed0d1/figures/pipeline.png" />
+  <img width="800" src="https://drive.google.com/uc?export=view&id=173u4BWHWPMw0BBa4GHxRtmP1RetHZ5gD" />
 </p> 
 &nbsp;
+
 
 
 The parameters are highly customizable, as shown in Table 1, which lists the class parameters and their corresponding default input values
