@@ -155,7 +155,7 @@ Table 3 presents a summary of the clustering algorithms and their respective con
 #### You can download our package from the PyPi repository using the following command:
 
 ```bash
-pip install conect2py
+pip install  
 ```
 
 #### If you want to install it locally you download the Wheel distribution from [Build Distribution](https://pypi.org/project/conect2py/0.1.1/#files).
@@ -163,7 +163,7 @@ pip install conect2py
 *First navigate to the folder where you downloaded the file and run the following command:*
 
 ```bash
-pip install conect2py-0.1.1-py3-none-any.whl
+pip install  
 ```
 
 ---
