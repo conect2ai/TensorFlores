@@ -81,7 +81,7 @@ The pipeline illustrated in Figure outlines a workflow for optimizing and deploy
 
 &nbsp;
 <p align="center">
-  <img width="800" src="https://github.com/conect2ai/TensorFlores/blob/main/figures/pipeline.png" />
+  <img width="800" src="https://github.com/conect2ai/TensorFlores/blob/550a9f6415ee8396222bd80dffbc908fb70ed0d1/figures/pipeline.png" />
 </p> 
 &nbsp;
 
