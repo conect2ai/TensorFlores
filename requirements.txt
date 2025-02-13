@@ -1,0 +1,7 @@
+pandas==2.2.3
+numpy==1.24.0
+scikit-learn==1.0.2
+pandas==2.2.3
+matplotlib==3.7.1
+river==0.21.2
+tensorflow==2.15.0
