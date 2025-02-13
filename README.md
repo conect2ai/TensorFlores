@@ -178,7 +178,7 @@ The following four examples will be considered:
 
 Implementation and Training of a Neural Network Using TensorFlores:
 
-[![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](./examples/01_example_01/Example_01.ipynb)
+[![Jupyter](https://img.shields.io/badge/-Notebook-191A1B?style=flat-square&logo=jupyter)](https://github.com/conect2ai/TensorFlores/blob/main/examples/01_example_01/Example_01.ipynb)
 
 
 ### Example 02
