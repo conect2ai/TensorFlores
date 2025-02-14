@@ -4,17 +4,18 @@ build-backend = "hatchling.build"
 
 [project]
 name = "tensorflores"
-version = "0.1.4"
+version = "0.1.5"
 authors = [
-  { name="Thommas Kevin Sales Flores", email="thommas.flores.101@ufrn.edu.br" },
+  {name="Thommas K. S. Flores", email="thommas.flores.101@ufrn.edu.br"}
 ]
-description = "collection of biblical humans and their family relations"
+description = "The TensorFlores framework is a Python-based solution designed for optimizing machine learning deployment in resource-constrained environments."
 readme = "README.md"
 requires-python = ">=3.9.6"
+keywords = ["TinyML", "EdgeAI", "Quantization", "Machine Learning"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
+    "Operating System :: OS Independent"
 ]
 
 [project.urls]
