@@ -1,14 +1,19 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "tensorflores"
-version = "0.1.5"
-authors = [
-  {name = "Thommas K. S. Flores", email = "thommas.flores.101@ufrn.edu.br"}
-]
+version = "0.1.6"
 description = "TensorFlores is a Python-based framework for optimizing machine learning deployment in resource-constrained environments, with support for TinyML, EdgeAI, and quantization."
 readme = "README.md"
 requires-python = ">=3.9.6"
-license = {text = "MIT"}
+license = {text = "MIT"}  # or use "license = "MIT"" for simpler SPDX format
 keywords = ["TinyML", "EdgeAI", "Quantization", "Machine Learning"]
+
+authors = [
+  {name = "Thommas K. S. Flores", email = "thommas.flores.101@ufrn.edu.br"}
+]
 
 dependencies = [
   "pandas==2.2.3",

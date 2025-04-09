@@ -20,7 +20,7 @@
 The TensorFlores framework is a Python-based solution designed for optimizing machine learning deployment in resource-constrained environments. It introduces an evolving clustering-based quantization, enabling quantization-aware training (QAT) and post-training quantization (PTQ) while preserving model accuracy. TensorFlores seamlessly converts TensorFlow models into optimized formats and generates platform-agnostic C++ code for embedded systems. Its modular architecture minimizes memory usage and computational overhead, ensuring efficient real-time inference. By integrating clustering-based quantization and automated code generation, TensorFlores enhances the feasibility of TinyML applications, particularly in low-power and edge AI scenarios. This framework provides a robust and scalable solution for deploying machine learning models in embedded and IoT systems.
 
 <p align="right">
-  <img alt="version" src="https://img.shields.io/badge/version-0.1.4-blue">
+  <img alt="version" src="https://img.shields.io/badge/version-0.1.6-blue">
 </p>
 
 - [Software description](#software-description)
@@ -60,20 +60,22 @@ The project directory is divided into key components, as illustrated in Figure:
 ```plaintext
 tensorflores/
 ├── models/
+│   ├── __init__.py
 │   └── multilayer_perceptron.py
 ├── utils/
+│   ├── __init__.py
 │   ├── autocloud/
+│   │   ├── __init__.py
 │   │   ├── auto_cloud_bias.py
 │   │   ├── auto_cloud_weight.py
 │   │   ├── data_cloud_bias.py
-│   │   ├── data_cloud_weight.py
-│   │   └── __init__.py
+│   │   └── data_cloud_weight.py
 │   ├── array_manipulation.py
 │   ├── clustering.py
 │   ├── cpp_generation.py
 │   ├── json_handle.py
-│   ├── quantization.py
-│   └── __init__.py
+│   └── quantization.py
+└── __init__.py
 ```
 
 ### Software functionalities
@@ -165,7 +167,7 @@ pip install  tensorflores
 *First navigate to the folder where you downloaded the file and run the following command:*
 
 ```bash
-pip install tensorflores-0.1.4-py3-none-any.whl
+pip install tensorflores-0.1.6-py3-none-any.whl
 ```
 
 ---
