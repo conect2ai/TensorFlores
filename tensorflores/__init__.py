@@ -1,1 +1,4 @@
-from tensorflores.models.multilayer_perceptron import MultilayerPerceptron
+from .models.multilayer_perceptron import MultilayerPerceptron
+from . import utils
+
+__all__ = ["MultilayerPerceptron", "utils"]

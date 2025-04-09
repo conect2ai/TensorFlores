@@ -1,5 +1,4 @@
 import numpy as np
-
 from tensorflores.utils.autocloud.data_cloud_weight import DataCloudWeight
 
 class AutoCloudWeight:

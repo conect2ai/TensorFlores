@@ -1,23 +1,34 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [project]
 name = "tensorflores"
 version = "0.1.5"
 authors = [
-  {name="Thommas K. S. Flores", email="thommas.flores.101@ufrn.edu.br"}
+  {name = "Thommas K. S. Flores", email = "thommas.flores.101@ufrn.edu.br"}
 ]
-description = "The TensorFlores framework is a Python-based solution designed for optimizing machine learning deployment in resource-constrained environments."
+description = "TensorFlores is a Python-based framework for optimizing machine learning deployment in resource-constrained environments, with support for TinyML, EdgeAI, and quantization."
 readme = "README.md"
 requires-python = ">=3.9.6"
+license = {text = "MIT"}
 keywords = ["TinyML", "EdgeAI", "Quantization", "Machine Learning"]
+
+dependencies = [
+  "pandas==2.2.3",
+  "numpy==1.24.0",
+  "scikit-learn==1.0.2",
+  "river==0.21.2",
+  "tensorflow==2.15.0"
+]
+
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent"
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent"
 ]
 
 [project.urls]
 Homepage = "https://conect2ai.dca.ufrn.br/"
-Issues = "https://github.com/conect2ai/TensorFlores"
+Repository = "https://github.com/conect2ai/TensorFlores"
+Issues = "https://github.com/conect2ai/TensorFlores/issues"

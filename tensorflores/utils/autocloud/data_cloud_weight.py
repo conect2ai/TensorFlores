@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class DataCloudWeight:
 	N=0
 	def __init__(self,x):

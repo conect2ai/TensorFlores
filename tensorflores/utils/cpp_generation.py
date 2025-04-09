@@ -1,6 +1,3 @@
-from tensorflores.utils.json_handle import JsonHandle
-
-
 class CppGeneration:
     """
     The `CppGeneration` class is designed to facilitate the generation of C++ code for machine learning models, 

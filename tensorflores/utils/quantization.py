@@ -1,6 +1,7 @@
 import numpy as np
 from typing import Dict, Optional, List, Any
 import copy
+
 from tensorflores.models.multilayer_perceptron import MultilayerPerceptron
 from tensorflores.utils.array_manipulation import ArrayManipulation
 from tensorflores.utils.json_handle import JsonHandle
