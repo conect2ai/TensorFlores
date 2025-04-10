@@ -3,8 +3,10 @@ import pandas as pd
 from river import stream
 
 from tensorflores.utils.array_manipulation import ArrayManipulation
+from tensorflores.utils.clustering import ClusteringMethods
 from tensorflores.utils.cpp_generation import CppGeneration
 from tensorflores.utils.json_handle import JsonHandle
+
 
 class MultilayerPerceptron:
     def __init__(self, 
@@ -832,15 +834,15 @@ class MultilayerPerceptron:
                             bias_list = ArrayManipulation().creat_list_from_array(self.biases)
                             
                             # Apply clustering to weights and biases
-                            self.bias_center = self.applying_clusterings(
+                            self.bias_center = ClusteringMethods().applying_clusterings(
                                 clustering_method=bias_clustering_method, parameter_list=bias_list)
-                            self.weight_center = self.applying_clusterings(
+                            self.weight_center = ClusteringMethods().applying_clusterings(
                                 clustering_method=weight_clustering_method, parameter_list=weight_list)
                             
                             # Find closest cluster centers
-                            result_df_bias = self.find_closest_values(
+                            result_df_bias = ClusteringMethods().find_closest_values(
                                 bias_list, self.bias_center, distance_metric=distance_metric)
-                            result_df_weight = self.find_closest_values(
+                            result_df_weight = ClusteringMethods().find_closest_values(
                                 weight_list, self.weight_center, distance_metric=distance_metric)
                             
                             # Convert clustered results back into arrays
@@ -964,43 +966,6 @@ class MultilayerPerceptron:
             raise RuntimeError(f"An error occurred during parameter updates: {str(e)}")
 
 
-
-    def applying_clusterings(self, clustering_method, parameter_list):
-        """
-        Applies the specified clustering method to a given parameter list and returns the computed centers.
-
-        Args:
-            clustering_method (tuple): A tuple containing the method name (str) and the clustering object.
-            parameter_list (list): A list of parameters to be clustered.
-
-        Returns:
-            list: A list of cluster centers computed by the specified method.
-
-        Raises:
-            ValueError: If the clustering method is unknown or invalid.
-        """
-        method_name, clusterization = clustering_method
-        center_list = []
-
-        try:
-            if method_name == "AUTOCLOUD":
-                self._apply_autocloud(clusterization, parameter_list, center_list)
-
-            elif method_name in {"MEANSHIFT", "AFFINITYPROP"}:
-                self._apply_batch_clustering(clusterization, parameter_list, center_list)
-
-            elif method_name == "DBSTREAM":
-                self._apply_dbstream(clusterization, parameter_list, center_list)
-
-            else:
-                raise ValueError(f"Unknown clustering method: {method_name}")
-
-            return center_list
-
-        except Exception as e:
-            raise RuntimeError(f"Error applying clustering method {method_name}: {e}")
-
-
     def _apply_autocloud(self, clusterization, parameter_list, center_list):
         """
         Helper method for applying the AutoCloud clustering method.
@@ -1033,228 +998,6 @@ class MultilayerPerceptron:
             clusterization.learn_one(x=x)
         for i in range(clusterization.n_clusters):
             center_list.append(clusterization.centers[i][0])
-
-
-
-    @staticmethod
-    def __mahalanobis_distance(a, b, data):
-        # Garantir que a e b sejam arrays 1D
-        a = np.array(a)
-        b = np.array(b)
-
-        # Calcular o desvio padrão dos dados
-        std_dev = np.std(data)
-
-        # Se o desvio padrão for zero, não é possível calcular a Mahalanobis
-        if std_dev == 0:
-            raise ValueError("O desvio padrão é zero, impossível calcular a distância de Mahalanobis.")
-
-        # Calcular a diferença entre os pontos
-        delta = a - b
-
-        # Calcular a distância de Mahalanobis
-        dist = np.abs(delta) / std_dev
-
-        return dist
-
-
-
-    @staticmethod
-    def __euclidean_distance(a, b):
-        if isinstance(a, (int, float)):
-            a = [a]
-        if isinstance(b, (int, float)):
-            b = [b]
-        return sum((ai - bi) ** 2 for ai, bi in zip(a, b)) ** 0.5
-
-    @staticmethod
-    def __manhattan_distance(a, b):
-        if isinstance(a, (int, float)):
-            a = [a]
-        if isinstance(b, (int, float)):
-            b = [b]
-        return sum(abs(ai - bi) for ai, bi in zip(a, b))
-
-    @staticmethod
-    def __minkowski_distance(a, b, p=3):
-        if isinstance(a, (int, float)):
-            a = [a]
-        if isinstance(b, (int, float)):
-            b = [b]
-        return sum(abs(ai - bi) ** p for ai, bi in zip(a, b)) ** (1 / p)
-
-    @staticmethod
-    def __chebyshev_distance(a, b):
-        if isinstance(a, (int, float)):
-            a = [a]
-        if isinstance(b, (int, float)):
-            b = [b]
-        return max(abs(ai - bi) for ai, bi in zip(a, b))
-
-    @staticmethod
-    def __cosine_distance(a, b):
-        if isinstance(a, (int, float)):
-            a = [a]
-        if isinstance(b, (int, float)):
-            b = [b]
-        dot_product = sum(ai * bi for ai, bi in zip(a, b))
-        magnitude_a = sum(ai ** 2 for ai in a) ** 0.5
-        magnitude_b = sum(bi ** 2 for bi in b) ** 0.5
-        return 1 - (dot_product / (magnitude_a * magnitude_b))
-
-    @staticmethod
-    def __hamming_distance(a, b):
-        if isinstance(a, (int, float)):
-            a = [a]
-        if isinstance(b, (int, float)):
-            b = [b]
-        return sum(1 for ai, bi in zip(a, b) if ai != bi)
-
-    @staticmethod
-    def __bray_curtis_distance(a, b):
-        if isinstance(a, (int, float)):
-            a = [a]
-        if isinstance(b, (int, float)):
-            b = [b]
-        numerator = sum(abs(ai - bi) for ai, bi in zip(a, b))
-        denominator = sum(abs(ai + bi) for ai, bi in zip(a, b))
-        return numerator / denominator
-
-    @staticmethod
-    def __jaccard_distance(a, b):
-        if isinstance(a, (int, float)):
-            a = [a]
-        if isinstance(b, (int, float)):
-            b = [b]
-        set_a, set_b = set(a), set(b)
-        intersection = len(set_a & set_b)
-        union = len(set_a | set_b)
-        return 1 - intersection / union
-
-    @staticmethod
-    def __wasserstein_distance(a, b):
-        if isinstance(a, (int, float)):
-            a = [a]
-        if isinstance(b, (int, float)):
-            b = [b]
-        sorted_a, sorted_b = sorted(a), sorted(b)
-        return sum(abs(ai - bi) for ai, bi in zip(sorted_a, sorted_b))
-
-    @staticmethod
-    def __dtw_distance(a, b):
-        if isinstance(a, (int, float)):
-            a = [a]
-        if isinstance(b, (int, float)):
-            b = [b]
-        n, m = len(a), len(b)
-        dtw_matrix = [[float('inf')] * m for _ in range(n)]
-        dtw_matrix[0][0] = abs(a[0] - b[0])
-
-        for i in range(n):
-            for j in range(m):
-                cost = abs(a[i] - b[j])
-                if i > 0:
-                    dtw_matrix[i][j] = min(dtw_matrix[i][j], dtw_matrix[i-1][j] + cost)
-                if j > 0:
-                    dtw_matrix[i][j] = min(dtw_matrix[i][j], dtw_matrix[i][j-1] + cost)
-                if i > 0 and j > 0:
-                    dtw_matrix[i][j] = min(dtw_matrix[i][j], dtw_matrix[i-1][j-1] + cost)
-
-        return dtw_matrix[-1][-1]
-
-    def find_closest_values(self, array_parameter:list, array_centers:list, distance_metric:str = "euclidean"):
-        """
-        Finds the closest centers for each value in the array_parameter based on the specified distance type.
-
-        Args:
-            array_parameter (list): List of values for which the closest centers are to be found.
-            array_centers (list): List of reference centers.
-            distance_metric (str): Type of distance metric to use, e.g., "euclidean", "manhattan".
-
-        Returns:
-            pd.DataFrame: A DataFrame containing the original value, the closest center, and the center index.
-
-        Raises:
-            ValueError: If the specified distance type is not recognized.
-            TypeError: If the input arrays are not iterable.
-        """
-        try:
-            # Basic validation to ensure input parameters are iterable.
-            if not hasattr(array_parameter, "__iter__") or not hasattr(array_centers, "__iter__"):
-                raise TypeError("The parameters array_parameter and array_centers must be iterable.")
-            
-            # Validation for recognized distance types.
-            available_distances = [
-                "euclidean", "manhattan", "minkowski", "chebyshev", 
-                "cosine", "hamming", "bray_curtis", "jaccard", 
-                "wasserstein", "dtw", "mahalanobis"
-            ]
-            if distance_metric not in available_distances:
-                raise ValueError(f"Unknown distance type: {distance_metric}. Valid options are: {', '.join(available_distances)}")
-
-            results = []
-
-            # Iterate over each value in the input array.
-            for value in array_parameter:
-                distances = []  # List to store calculated distances for each center.
-
-                # Calculate the distance for each center based on the specified type.
-                for center in array_centers:
-                    try:
-                        if distance_metric == "euclidean":
-                            distance = self.__euclidean_distance(value, center)
-                        elif distance_metric == "manhattan":
-                            distance = self.__manhattan_distance(value, center)
-                        elif distance_metric == "minkowski":
-                            distance = self.__minkowski_distance(value, center)
-                        elif distance_metric == "chebyshev":
-                            distance = self.__chebyshev_distance(value, center)
-                        elif distance_metric == "cosine":
-                            distance = self.__cosine_distance(value, center)
-                        elif distance_metric == "hamming":
-                            distance = self.__hamming_distance(value, center)
-                        elif distance_metric == "bray_curtis":
-                            distance = self.__bray_curtis_distance(value, center)
-                        elif distance_metric == "jaccard":
-                            distance = self.__jaccard_distance(value, center)
-                        elif distance_metric == "wasserstein":
-                            distance = self.__wasserstein_distance(value, center)
-                        elif distance_metric == "dtw":
-                            distance = self.__dtw_distance(value, center)
-                        elif distance_metric == "mahalanobis":
-                            distance = self.__mahalanobis_distance(value, center, array_parameter)
-                        else:
-                            # Unlikely case since the type has already been validated.
-                            raise ValueError(f"Unknown distance type: {distance_metric}")
-                        
-                        distances.append(distance)
-                    except Exception as e:
-                        # Handle any unexpected error during distance calculation.
-                        raise RuntimeError(f"Error calculating distance for center {center} with value {value}: {str(e)}")
-
-                # Find the index of the closest center based on the smallest distance.
-                try:
-                    closest_center_idx = distances.index(min(distances))
-                    closest_center = array_centers[closest_center_idx]
-                except ValueError as e:
-                    # Unlikely case if the distances list is empty.
-                    raise RuntimeError(f"Error finding the closest center: {str(e)}")
-
-                # Store the results in a structured format.
-                results.append({
-                    'Values': value[0],  # Assuming `value` is a list or array.
-                    'Center': closest_center,
-                    'Index': closest_center_idx
-                })
-
-            # Convert the results to a Pandas DataFrame and return.
-            df_result = pd.DataFrame(results)
-            return df_result
-        
-        except Exception as e:
-            # General exception handling to capture unexpected errors.
-            raise RuntimeError(f"An error occurred while executing the function 'find_closest_values': {str(e)}")
-
 
 
     def save_model_as_cpp(self, file_name: str):

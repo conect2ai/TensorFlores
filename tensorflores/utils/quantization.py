@@ -2,9 +2,11 @@ import numpy as np
 from typing import Dict, Optional, List, Any
 import copy
 
-from tensorflores.models.multilayer_perceptron import MultilayerPerceptron
 from tensorflores.utils.array_manipulation import ArrayManipulation
+from tensorflores.utils.clustering import ClusteringMethods
 from tensorflores.utils.json_handle import JsonHandle
+
+
 
 
 class Quantization:
@@ -127,20 +129,20 @@ class Quantization:
             Dict[str, Any]: Modified JSON data with evolving quantization applied.
         """
 
-        mlp = MultilayerPerceptron()
+        cluster = ClusteringMethods()
 
         for i in range(10):
-            bias_center = mlp.applying_clusterings(
+            bias_center = cluster.applying_clusterings(
                 clustering_method=bias_clustering_method, parameter_list=bias_list
             )
-            weight_center = mlp.applying_clusterings(
+            weight_center = cluster.applying_clusterings(
                 clustering_method=weight_clustering_method, parameter_list=weight_list
             )
 
-        result_df_bias = mlp.find_closest_values(
+        result_df_bias = cluster.find_closest_values(
             bias_list, bias_center, distance_metric=distance_metric
         )
-        result_df_weight = mlp.find_closest_values(
+        result_df_weight = cluster.find_closest_values(
             weight_list, weight_center, distance_metric=distance_metric
         )
 

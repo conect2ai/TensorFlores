@@ -167,7 +167,7 @@ pip install  tensorflores
 *First navigate to the folder where you downloaded the file and run the following command:*
 
 ```bash
-pip install tensorflores-0.1.6-py3-none-any.whl
+pip install tensorflores-0.1.7-py3-none-any.whl
 ```
 
 ---
