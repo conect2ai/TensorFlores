@@ -239,8 +239,6 @@ class ClusteringMethods:
         """
         Helper method for applying the AutoCloud clustering method.
         """
-        print('parameter_list: ', parameter_list)
-        print('ype(parameter_list): ', type(parameter_list))
         for bias in parameter_list:
             clusterization.run(bias)
         for cloud in clusterization.c:
