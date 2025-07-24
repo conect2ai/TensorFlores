@@ -2,6 +2,7 @@ from sklearn.cluster import MeanShift
 from sklearn.cluster import AffinityPropagation
 from river import cluster
 import numpy as np
+from river import stream
 import pandas as pd
 
 from tensorflores.utils.autocloud.auto_cloud_bias import AutoCloudBias 
@@ -234,7 +235,40 @@ class ClusteringMethods:
             raise RuntimeError(f"Error applying clustering method {method_name}: {e}")
         
 
+    def _apply_autocloud(self, clusterization, parameter_list, center_list):
+        """
+        Helper method for applying the AutoCloud clustering method.
+        """
+        print('parameter_list: ', parameter_list)
+        print('ype(parameter_list): ', type(parameter_list))
+        for bias in parameter_list:
+            clusterization.run(bias)
+        for cloud in clusterization.c:
+            center_list.append(cloud.mean.tolist()[0])
 
+
+    def _apply_batch_clustering(self, clusterization, parameter_list, center_list):
+        """
+        Helper method for batch-based clustering methods (MeanShift and Affinity Propagation).
+        """
+        if len(parameter_list) > 150:
+            chunk_size = 100
+            chunks = [parameter_list[i:i + chunk_size] for i in range(0, len(parameter_list), chunk_size)]
+            for chunk in chunks:
+                clusterization.fit(chunk)
+        else:
+            clusterization.fit(parameter_list)
+        center_list.extend(clusterization.cluster_centers_.reshape(1, -1)[0].tolist())
+
+
+    def _apply_dbstream(self, clusterization, parameter_list, center_list):
+        """
+        Helper method for applying the DBSTREAM clustering method.
+        """
+        for x, _ in stream.iter_array(parameter_list):
+            clusterization.learn_one(x=x)
+        for i in range(clusterization.n_clusters):
+            center_list.append(clusterization.centers[i][0])
 
 
     def find_closest_values(self, array_parameter:list, array_centers:list, distance_metric:str = "euclidean"):
