@@ -70,26 +70,8 @@ class CppGeneration:
     def __generate_cpp_from_json_QAT(self, json_data):
         """
         Generates C++ code for a neural network (Multilayer Perceptron) based on the given JSON data.
-        The function creates a class `MultilayerPerceptron` with a `predict` function that accepts an 
-        input array and performs matrix multiplication for each layer.
-
-        The C++ code includes the following:
-        - Arrays for weights and biases for each layer.
-        - Functions for various activation functions used in the layers.
-        - Matrix multiplication code for performing forward propagation through the layers.
-        
-        The function handles two cases:
-        - If the model is trained with quantization, it uses quantized weights and biases (stored as centers).
-        - If the model is not trained with quantization, it uses the original weights and biases.
-
-        Args:
-            json_data (dict): The JSON data containing the model parameters (weights, biases, and activation functions).
-
-        Returns:
-            str: A string containing the generated C++ code.
-            
-        Raises:
-            Exception: If any error occurs during the generation of the C++ code.
+        The function creates a class `MultilayerPerceptron` with a `predict` function that accepts an
+        input array and returns an array of outputs.
         """
 
         try:
@@ -98,19 +80,20 @@ class CppGeneration:
             cpp_code += "class MultilayerPerceptron {\n"
             cpp_code += "public: \n\n"
 
-            cpp_code += "float predict(float *x) { \n"
-            cpp_code += "float y_pred = 0;\n"
+            # Get output layer size
+            output_layer_size = len(json_data["layers"][-1]["biases"])
+            
+            # Modified predict function to return array of outputs
+            cpp_code += f"float* predict(float *x) {{\n"
+            cpp_code += f"    float* y_pred = new float[{output_layer_size}];\n"
 
-
-            if (json_data['model_quantized']  == True) or (json_data['model_quantized']  == 'evolving'):
+            if (json_data['model_quantized'] == True) or (json_data['model_quantized'] == 'evolving'):
                 # Generate centers array
                 cpp_code += f"static const float center_bias[{len(json_data['centers_bias'])}] = "
                 cpp_code += "{" + ", ".join(map(str, json_data["centers_bias"])) + "};\n\n"
 
                 cpp_code += f"static const float centers_weights[{len(json_data['centers_weights'])}] = "
                 cpp_code += "{" + ", ".join(map(str, json_data["centers_weights"])) + "};\n\n"
-
-
 
                 # Generate positions of weights and bias arrays
                 for i, layer in enumerate(json_data["layers"]):
@@ -126,7 +109,6 @@ class CppGeneration:
 
                 # Matrix multiplication
                 for i, layer in enumerate(json_data["layers"]):
-
                     if i == 0:
                         cpp_code += f"    // Input Layer \n"
                         cpp_code += f"    float z{i + 1}[{len(layer['biases'])}];\n"
@@ -153,17 +135,20 @@ class CppGeneration:
                         cpp_code += "    }\n\n"
                     if i == len(json_data["layers"])-1:
                         cpp_code += f"    // Output Layer\n"
-                        cpp_code += f"    float z{i + 1} = center_bias[b{i + 1}[0]];\n"
-                        cpp_code += f"    for (int i = 0; i < {len(layer['weights'])}; i++)\n"
-                        cpp_code += "     {\n"
-                        cpp_code += f"       z{i + 1} += z{i}[i] * centers_weights[w{i + 1}[i][0]];\n"
-                        cpp_code += f"       z{i + 1} = {layer['activation']}(z{i + 1});"
-                        cpp_code += "     }\n\n"  
-                        
-                cpp_code += "y_pred = z{0};\n".format(len(json_data["layers"]))
-                cpp_code += "return y_pred;"
+                        cpp_code += f"    float z{i + 1}[{len(layer['biases'])}];\n"
+                        cpp_code += f"    for (int k = 0; k < {len(layer['biases'])}; k++)\n"
+                        cpp_code += "    {\n"
+                        cpp_code += f"        z{i + 1}[k] = center_bias[b{i + 1}[k]];\n"
+                        cpp_code += f"        for (int j = 0; j < {len(layer['weights'])}; j++)\n"
+                        cpp_code += "        {\n"
+                        cpp_code += f"            z{i + 1}[k] += z{i}[j] * centers_weights[w{i + 1}[j][k]];\n"
+                        cpp_code += "        }\n"
+                        cpp_code += f"        y_pred[k] = {layer['activation']}(z{i + 1}[k]);"
+                        cpp_code += "    }\n\n"
+                
+                cpp_code += "    return y_pred;\n"
                 cpp_code += "}\n"
-    
+
             else:
                 for i, layer in enumerate(json_data["layers"]):
                     if "weights" in layer:
@@ -178,7 +163,6 @@ class CppGeneration:
 
                 # Matrix multiplication
                 for i, layer in enumerate(json_data["layers"]):
-
                     if i == 0:
                         cpp_code += f"    // Input Layer \n"
                         cpp_code += f"    float z{i + 1}[{len(layer['biases'])}];\n"
@@ -205,24 +189,31 @@ class CppGeneration:
                         cpp_code += "    }\n\n"
                     if i == len(json_data["layers"])-1:
                         cpp_code += f"    // Output Layer\n"
-                        cpp_code += f"    float z{i + 1} = b{i + 1}[0];\n"
-                        cpp_code += f"    for (int i = 0; i < {len(layer['weights'])}; i++)\n"
-                        cpp_code += "     {\n"
-                        cpp_code += f"       z{i + 1} += z{i}[i] * w{i + 1}[i][0];\n"
-                        cpp_code += f"       z{i + 1} = {layer['activation']}(z{i + 1});"
-                        cpp_code += "     }\n\n"  
-                        
-                cpp_code += "y_pred = z{0};\n".format(len(json_data["layers"]))
-                cpp_code += "return y_pred;"
+                        cpp_code += f"    float z{i + 1}[{len(layer['biases'])}];\n"
+                        cpp_code += f"    for (int k = 0; k < {len(layer['biases'])}; k++)\n"
+                        cpp_code += "    {\n"
+                        cpp_code += f"        z{i + 1}[k] = b{i + 1}[k];\n"
+                        cpp_code += f"        for (int j = 0; j < {len(layer['weights'])}; j++)\n"
+                        cpp_code += "        {\n"
+                        cpp_code += f"            z{i + 1}[k] += z{i}[j] * w{i + 1}[j][k];\n"
+                        cpp_code += "        }\n"
+                        cpp_code += f"        y_pred[k] = {layer['activation']}(z{i + 1}[k]);"
+                        cpp_code += "    }\n\n"
+                
+                cpp_code += "    return y_pred;\n"
                 cpp_code += "}\n"
 
+            # Add memory cleanup function
+            cpp_code += "void free_prediction(float* prediction) {\n"
+            cpp_code += "    delete[] prediction;\n"
+            cpp_code += "}\n\n"
 
             cpp_code += "protected:\n"
             # Get all activation functions
             list_activation_function = []
             for layer in json_data["layers"]:
                 list_activation_function.append(layer['activation'])
-                
+               
 
             # Remove dup and get only activation functions used
             for activation in set(list_activation_function):
@@ -298,11 +289,10 @@ class CppGeneration:
                     cpp_code += "    return log(1 + exp(x));\n"
                     cpp_code += "};\n\n"
 
-
             cpp_code += "};\n"
             cpp_code += "}\n"
             cpp_code += "}\n"
-            
+           
             return cpp_code
         except Exception as e:
             raise Exception(f"An unexpected error occurred: {str(e)}") from e
@@ -318,7 +308,7 @@ class CppGeneration:
         quantization_scheme (str): The quantization scheme ('total', 'weights', or 'biases').
         
         Returns:
-        str: C++ code representing the model.
+        str: C++ code representing the model with support for multiple outputs.
         
         Exceptions:
         - KeyError: If a key in the JSON data is missing.
@@ -326,14 +316,16 @@ class CppGeneration:
         - Exception: For any other unexpected errors.
         """   
         try:
+            # Get output layer size
+            output_layer_size = len(json_data["layers"][-1]["biases"])
             
             cpp_code = (
                 "namespace Conect2AI {\n"
                 "namespace TensorFlores {\n"
                 "class MultilayerPerceptron {\n"
                 "public: \n\n"
-                "float predict(float *x) { \n"
-                "float y_pred = 0;\n"
+                "float* predict(float *x) { \n"
+                f"    float* y_pred = new float[{output_layer_size}];\n"
             )
 
             # Generate weights and bias arrays
@@ -378,17 +370,26 @@ class CppGeneration:
 
                 else:
                     cpp_code += f"    // Output Layer\n"
-                    bias_expr = f"dequantized(b{i + 1}[0])" if quantization_type == 'int8' and quantization_scheme in ['total', 'biases'] else f"b{i + 1}[0]"
-                    cpp_code += f"    float z{i + 1} = {bias_expr};\n"
-                    cpp_code += f"    for (int i = 0; i < {len(layer['weights'])}; i++)\n    {{\n"
-                    weight_expr = f"z{i}[i] * dequantized(w{i + 1}[i][0])" if quantization_type == 'int8' and quantization_scheme in ['total', 'weights'] else f"z{i}[i] * w{i + 1}[i][0]"
-                    cpp_code += f"        z{i + 1} += {weight_expr};\n"
-                    cpp_code += f"        z{i + 1} = {layer['activation']}(z{i + 1});\n"
+                    cpp_code += f"    float z{i + 1}[{len(layer['biases'])}];\n"
+                    cpp_code += f"    for (int k = 0; k < {len(layer['biases'])}; k++)\n    {{\n"
+                    bias_expr = f"dequantized(b{i + 1}[k])" if quantization_type == 'int8' and quantization_scheme in ['total', 'biases'] else f"b{i + 1}[k]"
+                    cpp_code += f"        z{i + 1}[k] = {bias_expr};\n"
+                    cpp_code += f"        for (int j = 0; j < {len(layer['weights'])}; j++)\n        {{\n"
+                    weight_expr = f"z{i}[j] * dequantized(w{i + 1}[j][k])" if quantization_type == 'int8' and quantization_scheme in ['total', 'weights'] else f"z{i}[j] * w{i + 1}[j][k]"
+                    cpp_code += f"            z{i + 1}[k] += {weight_expr};\n"
+                    cpp_code += "        }\n"
+                    cpp_code += f"        y_pred[k] = {layer['activation']}(z{i + 1}[k]);\n"
                     cpp_code += "    }\n\n"
 
-            cpp_code += f"y_pred = z{len(json_data['layers'])};\n"
-            cpp_code += "return y_pred;\n"
-            cpp_code += "}\nprotected:\n"
+            cpp_code += "    return y_pred;\n"
+            cpp_code += "}\n\n"
+            
+            # Add memory cleanup function
+            cpp_code += "void free_prediction(float* prediction) {\n"
+            cpp_code += "    delete[] prediction;\n"
+            cpp_code += "}\n\n"
+            
+            cpp_code += "protected:\n"
 
             # Add dequantization function if needed
             if quantization_type == 'int8' and quantization_scheme in ['total', 'weights', 'biases']:
@@ -433,19 +434,15 @@ class CppGeneration:
 
 
 
-
-
     def __generate_cpp_from_json_not_quant(self, json_data):
         """
-        Generates C++ code from a TensorFlow or Tensorflores model in JSON format.
+        Generates C++ code from a non-quantized TensorFlow or Tensorflores model in JSON format.
         
         Parameters:
         json_data (dict): The model's information in JSON format, including weights, biases, and activations.
-        quantization_type (str): Type of quantization ('float32' or 'int8').
-        quantization_scheme (str): The quantization scheme ('total', 'weights', or 'biases').
         
         Returns:
-        str: C++ code representing the model.
+        str: C++ code representing the model with support for multiple outputs.
         
         Exceptions:
         - KeyError: If a key in the JSON data is missing.
@@ -453,14 +450,16 @@ class CppGeneration:
         - Exception: For any other unexpected errors.
         """   
         try:
+            # Get output layer size
+            output_layer_size = len(json_data["layers"][-1]["biases"])
             
             cpp_code = (
                 "namespace Conect2AI {\n"
                 "namespace TensorFlores {\n"
                 "class MultilayerPerceptron {\n"
                 "public: \n\n"
-                "float predict(float *x) { \n"
-                "float y_pred = 0;\n"
+                "float* predict(float *x) { \n"
+                f"    float* y_pred = new float[{output_layer_size}];\n"
             )
 
             # Generate weights and bias arrays
@@ -479,11 +478,9 @@ class CppGeneration:
                     cpp_code += f"    // Input Layer \n"
                     cpp_code += f"    float z{i + 1}[{len(layer['biases'])}];\n"
                     cpp_code += f"    for (int i = 0; i < {len(layer['biases'])}; i++)\n    {{\n"
-                    bias_expr = f"b{i + 1}[i]"
-                    cpp_code += f"        z{i + 1}[i] = {bias_expr};\n"
+                    cpp_code += f"        z{i + 1}[i] = b{i + 1}[i];\n"
                     cpp_code += f"        for (int j = 0; j < {len(layer['weights'])}; j++)\n        {{\n"
-                    weight_expr =  f"x[j] * w{i + 1}[j][i]"
-                    cpp_code += f"            z{i + 1}[i] += {weight_expr};\n"
+                    cpp_code += f"            z{i + 1}[i] += x[j] * w{i + 1}[j][i];\n"
                     cpp_code += "        }\n"
                     cpp_code += f"        z{i + 1}[i] = {layer['activation']}(z{i + 1}[i]);\n"
                     cpp_code += "    }\n\n"
@@ -492,30 +489,34 @@ class CppGeneration:
                     cpp_code += f"    // Hidden Layer {i + 1}\n"
                     cpp_code += f"    float z{i + 1}[{len(layer['biases'])}];\n"
                     cpp_code += f"    for (int i = 0; i < {len(layer['biases'])}; i++)\n    {{\n"
-                    bias_expr = f"b{i + 1}[i]"
-                    cpp_code += f"        z{i + 1}[i] = {bias_expr};\n"
+                    cpp_code += f"        z{i + 1}[i] = b{i + 1}[i];\n"
                     cpp_code += f"        for (int j = 0; j < {len(layer['weights'])}; j++)\n        {{\n"
-                    weight_expr =  f"z{i}[j] * w{i + 1}[j][i]"
-                    cpp_code += f"            z{i + 1}[i] += {weight_expr};\n"
+                    cpp_code += f"            z{i + 1}[i] += z{i}[j] * w{i + 1}[j][i];\n"
                     cpp_code += "        }\n"
                     cpp_code += f"        z{i + 1}[i] = {layer['activation']}(z{i + 1}[i]);\n"
                     cpp_code += "    }\n\n"
 
                 else:
                     cpp_code += f"    // Output Layer\n"
-                    bias_expr = f"b{i + 1}[0]"
-                    cpp_code += f"    float z{i + 1} = {bias_expr};\n"
-                    cpp_code += f"    for (int i = 0; i < {len(layer['weights'])}; i++)\n    {{\n"
-                    weight_expr = f"z{i}[i] * w{i + 1}[i][0]"
-                    cpp_code += f"        z{i + 1} += {weight_expr};\n"
-                    cpp_code += f"        z{i + 1} = {layer['activation']}(z{i + 1});\n"
+                    cpp_code += f"    float z{i + 1}[{len(layer['biases'])}];\n"
+                    cpp_code += f"    for (int k = 0; k < {len(layer['biases'])}; k++)\n    {{\n"
+                    cpp_code += f"        z{i + 1}[k] = b{i + 1}[k];\n"
+                    cpp_code += f"        for (int j = 0; j < {len(layer['weights'])}; j++)\n        {{\n"
+                    cpp_code += f"            z{i + 1}[k] += z{i}[j] * w{i + 1}[j][k];\n"
+                    cpp_code += "        }\n"
+                    cpp_code += f"        y_pred[k] = {layer['activation']}(z{i + 1}[k]);\n"
                     cpp_code += "    }\n\n"
 
-            cpp_code += f"y_pred = z{len(json_data['layers'])};\n"
-            cpp_code += "return y_pred;\n"
-            cpp_code += "}\nprotected:\n"
+            cpp_code += "    return y_pred;\n"
+            cpp_code += "}\n\n"
+            
+            # Add memory cleanup function
+            cpp_code += "void free_prediction(float* prediction) {\n"
+            cpp_code += "    delete[] prediction;\n"
+            cpp_code += "}\n\n"
+            
+            cpp_code += "protected:\n"
 
-   
             # Generate activation functions
             activations = set(layer['activation'] for layer in json_data["layers"])
             activation_functions = {
@@ -547,7 +548,6 @@ class CppGeneration:
             print(f"Value error: {e}")
         except Exception as e:
             print(f"Unexpected error: {e}")
-
 
 
     def  generate_cpp_from_json(self, json_data, file_name:str):
