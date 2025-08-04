@@ -21,7 +21,7 @@ void loop() {
     start_time = micros();
 
     // Make a prediction
-    float y_pred = ANN.predict(input_data[i]);
+    float* y_pred = ANN.predict(input_data[i]);
 
     // Capture final time
     end_time = micros();
@@ -32,7 +32,7 @@ void loop() {
     Serial.print(output_data[i], 8);
     //Serial.print(", Predicted: ");
     Serial.print(";");
-    Serial.print(y_pred, 8);
+    Serial.print(y_pred[0], 8);
     //Serial.print(", Time: ");
     Serial.print(";");
     Serial.println(width_time);
@@ -41,4 +41,5 @@ void loop() {
   Serial.println("END");
   delay(20000);
 }
+
 
